@@ -2,22 +2,31 @@
 #include <iostream>
 #include <thread>
 
+#include <simpleble/SimpleBLE.h>
+
 #define SLEEP_TIME 50 // Java側のバッファ用。初期値：1(ms)
 
 // cppで書くのほとんど初めてなので、後でキモかったら直してね。
 // とりま勉強がてら
-int main()
+int main(int argc, char **argv)
 {
-    // std::random_device rd;                           // 真乱数。ハードウェアのノイズを使ってるらしい
-    // std::mt19937 mt(rd());                           // 疑似乱数のシードを真乱数にしてるっぽい
-    // std::uniform_int_distribution<int> dist(0, 300); // 0~300の範囲指定。あんまし分かってないので調べたい
+    if (!SimpleBLE::Adapter::bluetooth_enabled())
+    {
+        std::cout << "Bluetooth is not enabled." << std::endl;
+        return 1;
+    }
 
-    // for (;;)
-    // {
-    //     std::cout << dist(mt) << std::endl;
+    auto adapters = SimpleBLE::Adapter::get_adapters();
+    if (adapters.empty())
+    {
+        std::cout << "No BLE adapters found." << std::endl;
+        return 1;
+    }
 
-    //     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
-    // }
+    auto adapter = adapters[0];
 
-    // return 0;
+    std::cout << "Adapter: " << adapter.identifier() << std::endl;
+    std::cout << "Address: " << adapter.address() << std::endl;
+
+    return 0;
 }
