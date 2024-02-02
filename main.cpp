@@ -16,17 +16,27 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    auto adapters = SimpleBLE::Adapter::get_adapters();
+    std::vector<SimpleBLE::Adapter> adapters = SimpleBLE::Adapter::get_adapters();
     if (adapters.empty())
     {
         std::cout << "No BLE adapters found." << std::endl;
         return 1;
     }
 
-    auto adapter = adapters[0];
+    SimpleBLE::Adapter adapter = adapters[0];
 
     std::cout << "Adapter: " << adapter.identifier() << std::endl;
     std::cout << "Address: " << adapter.address() << std::endl;
+
+    adapter.scan_for(500);
+
+    std::vector<SimpleBLE::Peripheral> peripherals = adapter.scan_get_results();
+
+    for (auto peripheral : peripherals)
+    {
+        std::cout << "Peripheral: " << peripheral.identifier() << std::endl;
+        std::cout << "Address: " << peripheral.address() << std::endl;
+    }
 
     return 0;
 }
