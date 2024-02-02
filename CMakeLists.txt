@@ -7,11 +7,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(CorBiCore)
 
+find_package(simpleble REQUIRED CONFIG)
+
 set(
     main.cpp
 )
 
 add_executable(CorBiCore main.cpp)
+
+target_link_libraries(CorBiCore simpleble::simpleble)
 
 if(MSVC)
     # Force to always compile with W4
