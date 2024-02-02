@@ -5,13 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-project(CorBiDummyProcess)
+project(CorBiCore)
 
 set(
     main.cpp
 )
 
-add_executable(dummyProcess main.cpp)
+add_executable(CorBiCore main.cpp)
 
 if(MSVC)
     # Force to always compile with W4
