@@ -7,8 +7,8 @@
 #define SLEEP_TIME 50 // Java側のバッファ用。初期値：1(ms)
 
 SimpleBLE::Peripheral findCorBi(SimpleBLE::Adapter adaper);
-// cppで書くのほとんど初めてなので、後でキモかったら直してね。
-// とりま勉強がてら
+// TODO 接続周りはコールバックに変更。
+// TODO エラーハンドリングしっかり。
 int main(int argc, char **argv)
 {
     if (!SimpleBLE::Adapter::bluetooth_enabled())
@@ -37,12 +37,24 @@ int main(int argc, char **argv)
     if (!CorBiReader.is_connected())
         return 1;
 
+    for (;;)
+    {
+        std::vector<std::pair<SimpleBLE::BluetoothUUID, SimpleBLE::BluetoothUUID>> uuids;
+        for (SimpleBLE::Service service : CorBiReader.services())
+            for (SimpleBLE::Characteristic characteristic : service.characteristics())
+                uuids.push_back(std::make_pair(service.uuid(), characteristic.uuid()));
+
+        SimpleBLE::ByteArray rx_data = CorBiReader.read(uuids[0].first, uuids[0].second);
+        std::cout << "content is " << rx_data << std::endl;
+    }
+
     std::cout << "Connected to CorBi." << std::endl;
 
     return 0;
 }
 
 // FIXME タイムアウトとか実装した方が良さそうだぞ
+// bool Peripheral.ininitialized()があるっぽ
 SimpleBLE::Peripheral findCorBi(SimpleBLE::Adapter adapter)
 {
     for (;;)
