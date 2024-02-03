@@ -28,12 +28,18 @@ int main(int argc, char **argv)
     std::cout << "Adapter: " << adapter.identifier() << std::endl;
     std::cout << "Address: " << adapter.address() << std::endl;
 
-    adapter.scan_for(500);
+    adapter.scan_for(4000);
 
     std::vector<SimpleBLE::Peripheral> peripherals = adapter.scan_get_results();
 
     for (auto peripheral : peripherals)
     {
+        if (peripheral.identifier() == "CorBi")
+        {
+            std::cout << "CorBi is found." << std::endl;
+            peripheral.connect();
+            std::cout << "Connected." << std::endl;
+        }
         std::cout << "Peripheral: " << peripheral.identifier() << std::endl;
         std::cout << "Address: " << peripheral.address() << std::endl;
     }
