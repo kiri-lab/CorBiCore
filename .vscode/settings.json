@@ -66,6 +66,18 @@
         "concepts": "cpp",
         "numeric": "cpp",
         "random": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "__std_stream": "cpp",
+        "__tree": "cpp",
+        "any": "cpp",
+        "charconv": "cpp",
+        "condition_variable": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "thread": "cpp",
+        "typeindex": "cpp"
     }
 }

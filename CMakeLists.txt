@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.21)
 enable_language(CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -7,11 +7,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(CorBiCore)
 
+find_package(simpleble REQUIRED CONFIG)
+
 set(
     main.cpp
 )
 
 add_executable(CorBiCore main.cpp)
+
+target_link_libraries(CorBiCore simpleble::simpleble)
 
 if(MSVC)
     # Force to always compile with W4
