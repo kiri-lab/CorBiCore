@@ -29,8 +29,8 @@ int main(int argc, char **argv)
 
     SimpleBLE::Adapter adapter = adapters[0];
 
-    std::cout << "Adapter: " << adapter.identifier() << std::endl;
-    std::cout << "Address: " << adapter.address() << std::endl;
+    // std::cout << "Adapter: " << adapter.identifier() << std::endl;
+    // std::cout << "Address: " << adapter.address() << std::endl;
 
     SimpleBLE::Peripheral CorBiReader = findCorBi(adapter);
     if (CorBiReader.is_connectable())
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
         // print_byte_array_hex(rx_data);
     }
 
-    std::cout << "Connected to CorBi." << std::endl;
+    // std::cout << "Connected to CorBi." << std::endl;
 
     return 0;
 }
@@ -84,13 +84,13 @@ SimpleBLE::Peripheral findCorBi(SimpleBLE::Adapter adapter)
         {
             if (peripheral.identifier() == "CorBi")
             {
-                std::cout << "CorBi is found." << std::endl;
+                // std::cout << "CorBi is found." << std::endl;
                 CorBiReader = peripheral;
                 if (CorBiReader.is_connectable())
                     return CorBiReader;
             }
-            std::cout << "Peripheral: " << peripheral.identifier() << std::endl;
-            std::cout << "Address: " << peripheral.address() << std::endl;
+            // std::cout << "Peripheral: " << peripheral.identifier() << std::endl;
+            // std::cout << "Address: " << peripheral.address() << std::endl;
         }
     }
 }
