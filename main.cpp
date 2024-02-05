@@ -9,6 +9,7 @@
 
 void print_byte_array_hex(SimpleBLE::ByteArray array);
 void print_byte_array_float(SimpleBLE::ByteArray array);
+void print_byte_array_int(SimpleBLE::ByteArray array);
 SimpleBLE::Peripheral findCorBi(SimpleBLE::Adapter adaper);
 // TODO 接続周りはコールバックに変更。
 // TODO エラーハンドリングしっかり。
@@ -47,8 +48,12 @@ int main(int argc, char **argv)
             for (SimpleBLE::Characteristic characteristic : service.characteristics())
                 uuids.push_back(std::make_pair(service.uuid(), characteristic.uuid()));
 
-        SimpleBLE::ByteArray rx_data = CorBiReader.read(uuids[0].first, uuids[0].second);
-        print_byte_array_float(rx_data);
+        SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(uuids[0].first, uuids[0].second);
+        print_byte_array_int(rx_data_IR);
+        std::cout << ", ";
+        SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(uuids[1].first, uuids[1].second);
+        print_byte_array_int(rx_data_RED);
+        std::cout << std::endl;
         // print_byte_array_hex(rx_data);
     }
 
@@ -69,6 +74,12 @@ void print_byte_array_float(SimpleBLE::ByteArray array)
 {
     float f = *reinterpret_cast<float *>(array.data());
     std::cout << f << std::endl;
+}
+
+void print_byte_array_int(SimpleBLE::ByteArray array)
+{
+    int i = *reinterpret_cast<int *>(array.data());
+    std::cout << i;
 }
 
 // FIXME タイムアウトとか実装した方が良さそうだぞ
