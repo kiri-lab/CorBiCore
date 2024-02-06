@@ -57,12 +57,12 @@ namespace fftsg
         cdft(m_frameSize * 2, -1, a, &m_ip[0], &m_w[0]);
     }
 
-    template <typename T>
-    void FFTEngine<T>::fft(std::complex<T> *a)
-    {
-        assert(static_cast<int>(a.size()) == m_frameSize);
-        cdft(m_frameSize * 2, -1, reinterpret_cast<T *>(a), &m_ip[0], &m_w[0]);
-    }
+    // template <typename T>
+    // void FFTEngine<T>::fft(std::complex<T> *a)
+    // {
+    //     assert(static_cast<int>(a.size()) == m_frameSize); // ポインタ.size()だから動かんかも。
+    //     cdft(m_frameSize * 2, -1, reinterpret_cast<T *>(a), &m_ip[0], &m_w[0]);
+    // }
 
     template <typename T>
     void FFTEngine<T>::fft(std::vector<T> &a)
