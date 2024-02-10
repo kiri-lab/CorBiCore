@@ -9,6 +9,7 @@
 
 void print_byte_array_hex(SimpleBLE::ByteArray array);
 void print_byte_array_float(SimpleBLE::ByteArray array);
+void print_byte_array_uint16(SimpleBLE::ByteArray array);
 void print_byte_array_int(SimpleBLE::ByteArray array);
 SimpleBLE::Peripheral findCorBi(SimpleBLE::Adapter adaper);
 // TODO 接続周りはコールバックに変更。
@@ -49,7 +50,7 @@ int main(int argc, char **argv)
                 uuids.push_back(std::make_pair(service.uuid(), characteristic.uuid()));
 
         SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(uuids[0].first, uuids[0].second);
-        print_byte_array_int(rx_data_IR);
+        print_byte_array_uint16(rx_data_IR);
         std::cout << ", ";
         SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(uuids[1].first, uuids[1].second);
         print_byte_array_int(rx_data_RED);
@@ -74,6 +75,15 @@ void print_byte_array_float(SimpleBLE::ByteArray array)
 {
     float f = *reinterpret_cast<float *>(array.data());
     std::cout << f << std::endl;
+}
+
+void print_byte_array_uint16(SimpleBLE::ByteArray array)
+{
+    for (size_t i = 0; i < array.size(); i += 2)
+    {
+        uint16_t number = (static_cast<unsigned char>(array[i]) << 8) | static_cast<unsigned char>(array[i + 1]);
+        std::cout << number << " ";
+    }
 }
 
 void print_byte_array_int(SimpleBLE::ByteArray array)
