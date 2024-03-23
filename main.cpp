@@ -47,16 +47,23 @@ int main(int argc, char **argv)
         std::vector<std::pair<SimpleBLE::BluetoothUUID, SimpleBLE::BluetoothUUID>> uuids;
         for (SimpleBLE::Service service : CorBiReader.services())
             for (SimpleBLE::Characteristic characteristic : service.characteristics())
+            {
                 uuids.push_back(std::make_pair(service.uuid(), characteristic.uuid()));
-
-        SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(uuids[0].first, uuids[0].second);
+                for (SimpleBLE::Descriptor descriptor : characteristic.descriptors())
+                    std::cout << CorBiReader.read(service.uuid(), characteristic.uuid(), descriptor.uuid()) << std::endl; // とりあえず取得テスト
+            }
+        // FIXME サンプルに従ってUUIDを取得する方法にしてたけど、UUID固定してるなら直接指定でも良いかも。
+        SimpleBLE::ByteArray rx_data = CorBiReader.read(uuids[0].first, uuids[0].second);
         SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(uuids[1].first, uuids[1].second);
+        SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(uuids[2].first, uuids[2].second);
         if (rx_data_RED != old_data)
         {
 
             print_byte_array_uint16(rx_data_IR);
-            std::cout << ", ";
+            std::cout << "k, ";
             print_byte_array_int(rx_data_RED);
+            std::cout << "r, ";
+            print_byte_array_int(rx_data);
             std::cout << std::endl;
         }
         old_data = rx_data_RED;
