@@ -7,6 +7,11 @@
 
 #define SLEEP_TIME 50 // Java側のバッファ用。初期値：1(ms)
 
+#define SERVICE_PULSEOXIMETER_UUID "c360fb9d-497f-4a0d-bfd3-6cbecd1786e1" // パルスオキシメータ
+#define CHARA_IR_UUID "0c1f518c-ffdf-4b0f-8f2f-ca1edc6dabae"              // 赤外線
+#define CHARA_RED_UUID "1d5b21fa-1a88-4ccb-8be8-9d8f07b0180c"             // 赤色
+#define CHARA_ORDER_UUID "9331cae2-0aec-4a90-a44b-7cde8cbc3257"           // オーダー
+
 void print_byte_array_hex(SimpleBLE::ByteArray array);
 void print_byte_array_float(SimpleBLE::ByteArray array);
 void print_byte_array_uint16(SimpleBLE::ByteArray array);
@@ -44,25 +49,28 @@ int main(int argc, char **argv)
     SimpleBLE::ByteArray old_data = "";
     for (;;)
     {
-        std::vector<std::pair<SimpleBLE::BluetoothUUID, SimpleBLE::BluetoothUUID>> uuids;
-        for (SimpleBLE::Service service : CorBiReader.services())
-            for (SimpleBLE::Characteristic characteristic : service.characteristics())
-            {
-                uuids.push_back(std::make_pair(service.uuid(), characteristic.uuid()));
-                for (SimpleBLE::Descriptor descriptor : characteristic.descriptors())
-                    std::cout << CorBiReader.read(service.uuid(), characteristic.uuid(), descriptor.uuid()) << std::endl; // とりあえず取得テスト
-            }
-        // FIXME サンプルに従ってUUIDを取得する方法にしてたけど、UUID固定してるなら直接指定でも良いかも。
-        SimpleBLE::ByteArray rx_data = CorBiReader.read(uuids[0].first, uuids[0].second);
-        SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(uuids[1].first, uuids[1].second);
-        SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(uuids[2].first, uuids[2].second);
+        // NOTE これで良くね？
+        // std::vector<std::pair<SimpleBLE::BluetoothUUID, SimpleBLE::BluetoothUUID>> uuids;
+        // for (SimpleBLE::Service service : CorBiReader.services())
+        //     for (SimpleBLE::Characteristic characteristic : service.characteristics())
+        //     {
+        //         uuids.push_back(std::make_pair(service.uuid(), characteristic.uuid()));
+        //         for (SimpleBLE::Descriptor descriptor : characteristic.descriptors())
+        //             std::cout << CorBiReader.read(service.uuid(), characteristic.uuid(), descriptor.uuid()) << std::endl; // とりあえず取得テスト
+        //     }
+        // SimpleBLE::ByteArray rx_data = CorBiReader.read(uuids[0].first, uuids[0].second);
+        // SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(uuids[1].first, uuids[1].second);
+        // SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(uuids[2].first, uuids[2].second);
+        SimpleBLE::ByteArray rx_data = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_ORDER_UUID);
+        SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_RED_UUID);
+        SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_IR_UUID);
         if (rx_data_RED != old_data)
         {
 
             print_byte_array_uint16(rx_data_IR);
-            std::cout << "k, ";
+            std::cout << " ";
             print_byte_array_int(rx_data_RED);
-            std::cout << "r, ";
+            std::cout << " ";
             print_byte_array_int(rx_data);
             std::cout << std::endl;
         }
