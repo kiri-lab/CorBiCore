@@ -49,18 +49,6 @@ int main(int argc, char **argv)
     SimpleBLE::ByteArray old_data = "";
     for (;;)
     {
-        // NOTE これで良くね？
-        // std::vector<std::pair<SimpleBLE::BluetoothUUID, SimpleBLE::BluetoothUUID>> uuids;
-        // for (SimpleBLE::Service service : CorBiReader.services())
-        //     for (SimpleBLE::Characteristic characteristic : service.characteristics())
-        //     {
-        //         uuids.push_back(std::make_pair(service.uuid(), characteristic.uuid()));
-        //         for (SimpleBLE::Descriptor descriptor : characteristic.descriptors())
-        //             std::cout << CorBiReader.read(service.uuid(), characteristic.uuid(), descriptor.uuid()) << std::endl; // とりあえず取得テスト
-        //     }
-        // SimpleBLE::ByteArray rx_data = CorBiReader.read(uuids[0].first, uuids[0].second);
-        // SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(uuids[1].first, uuids[1].second);
-        // SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(uuids[2].first, uuids[2].second);
         SimpleBLE::ByteArray rx_data = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_ORDER_UUID);
         SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_RED_UUID);
         SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_IR_UUID);
