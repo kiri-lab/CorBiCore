@@ -70,9 +70,9 @@ int main(int argc, char **argv)
                 old_data = rx_data_RED;
                 // print_byte_array_hex(rx_data);
             }
-            catch (SimpleBLE::Exception::BaseException &e)
+            catch (std::runtime_error &e)
             {
-                std::cout << "Error: " << e.what() << std::endl;
+                // std::cout << "Error: " << e.what() << std::endl;
                 break;
             }
         }
