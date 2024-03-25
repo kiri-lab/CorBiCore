@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 
             print_byte_array_uint16(rx_data_IR);
             std::cout << " ";
-            print_byte_array_int(rx_data_RED);
+            print_byte_array_uint16(rx_data_RED);
             std::cout << " ";
             print_byte_array_int(rx_data);
             std::cout << std::endl;
