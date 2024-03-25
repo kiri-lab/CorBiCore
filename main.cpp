@@ -19,8 +19,18 @@ void print_byte_array_int(SimpleBLE::ByteArray array);
 SimpleBLE::Peripheral findCorBi(SimpleBLE::Adapter adaper);
 // TODO 接続周りはコールバックに変更。
 // TODO エラーハンドリングしっかり。
+
+SimpleBLE::Peripheral CorBiReader;
+
+void CorBiCore_exit()
+{
+    CorBiReader.disconnect();
+    std::cout << "CorBiCore is exit." << std::endl;
+}
+
 int main(int argc, char **argv)
 {
+    std::atexit(CorBiCore_exit);
     for (;;) // FIXME 流石に関数として括り出した方がいいかも。connect関数とか、read関数とか。
     {
 
@@ -42,7 +52,7 @@ int main(int argc, char **argv)
         // std::cout << "Adapter: " << adapter.identifier() << std::endl;
         // std::cout << "Address: " << adapter.address() << std::endl;
 
-        SimpleBLE::Peripheral CorBiReader = findCorBi(adapter);
+        CorBiReader = findCorBi(adapter);
         if (CorBiReader.is_connectable())
             CorBiReader.connect();
         else
