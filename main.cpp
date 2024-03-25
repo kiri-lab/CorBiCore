@@ -21,53 +21,64 @@ SimpleBLE::Peripheral findCorBi(SimpleBLE::Adapter adaper);
 // TODO エラーハンドリングしっかり。
 int main(int argc, char **argv)
 {
-    if (!SimpleBLE::Adapter::bluetooth_enabled())
+    for (;;) // FIXME 流石に関数として括り出した方がいいかも。connect関数とか、read関数とか。
     {
-        std::cout << "Bluetooth is not enabled." << std::endl;
-        return 1;
-    }
 
-    std::vector<SimpleBLE::Adapter> adapters = SimpleBLE::Adapter::get_adapters();
-    if (adapters.empty())
-    {
-        std::cout << "No BLE adapters found." << std::endl;
-        return 1;
-    }
-
-    SimpleBLE::Adapter adapter = adapters[0];
-
-    // std::cout << "Adapter: " << adapter.identifier() << std::endl;
-    // std::cout << "Address: " << adapter.address() << std::endl;
-
-    SimpleBLE::Peripheral CorBiReader = findCorBi(adapter);
-    if (CorBiReader.is_connectable())
-        CorBiReader.connect();
-    else
-        return 1;
-    if (!CorBiReader.is_connected())
-        return 1;
-    SimpleBLE::ByteArray old_data = "";
-    for (;;)
-    {
-        SimpleBLE::ByteArray rx_data = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_ORDER_UUID);
-        SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_RED_UUID);
-        SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_IR_UUID);
-        if (rx_data_RED != old_data)
+        if (!SimpleBLE::Adapter::bluetooth_enabled())
         {
-
-            print_byte_array_uint16(rx_data_IR);
-            std::cout << " ";
-            print_byte_array_uint16(rx_data_RED);
-            std::cout << " ";
-            print_byte_array_int(rx_data);
-            std::cout << std::endl;
+            std::cout << "Bluetooth is not enabled." << std::endl;
+            return 1;
         }
-        old_data = rx_data_RED;
-        // print_byte_array_hex(rx_data);
+
+        std::vector<SimpleBLE::Adapter> adapters = SimpleBLE::Adapter::get_adapters();
+        if (adapters.empty())
+        {
+            std::cout << "No BLE adapters found." << std::endl;
+            return 1;
+        }
+
+        SimpleBLE::Adapter adapter = adapters[0];
+
+        // std::cout << "Adapter: " << adapter.identifier() << std::endl;
+        // std::cout << "Address: " << adapter.address() << std::endl;
+
+        SimpleBLE::Peripheral CorBiReader = findCorBi(adapter);
+        if (CorBiReader.is_connectable())
+            CorBiReader.connect();
+        else
+            return 1;
+        if (!CorBiReader.is_connected())
+            return 1;
+        SimpleBLE::ByteArray old_data = "";
+        for (;;)
+        {
+            try
+            {
+                SimpleBLE::ByteArray rx_data = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_ORDER_UUID);
+                SimpleBLE::ByteArray rx_data_RED = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_RED_UUID);
+                SimpleBLE::ByteArray rx_data_IR = CorBiReader.read(SERVICE_PULSEOXIMETER_UUID, CHARA_IR_UUID);
+                if (rx_data_RED != old_data)
+                {
+
+                    print_byte_array_uint16(rx_data_IR);
+                    std::cout << " ";
+                    print_byte_array_uint16(rx_data_RED);
+                    std::cout << " ";
+                    print_byte_array_int(rx_data);
+                    std::cout << std::endl;
+                }
+                old_data = rx_data_RED;
+                // print_byte_array_hex(rx_data);
+            }
+            catch (SimpleBLE::Exception::BaseException &e)
+            {
+                std::cout << "Error: " << e.what() << std::endl;
+                break;
+            }
+        }
+
+        // std::cout << "Connected to CorBi." << std::endl;
     }
-
-    // std::cout << "Connected to CorBi." << std::endl;
-
     return 0;
 }
 
