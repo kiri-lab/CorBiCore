@@ -28,9 +28,24 @@ void CorBiCore_exit()
     std::cout << "CorBiCore is exit." << std::endl;
 }
 
+void userInputListener()
+{
+    std::string input;
+    while (true)
+    {
+        std::cin >> input;
+        if (input == "e")
+        {
+            exit(0);
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     std::atexit(CorBiCore_exit);
+    std::thread inputThread(userInputListener);
+
     for (;;) // FIXME 流石に関数として括り出した方がいいかも。connect関数とか、read関数とか。
     {
 
